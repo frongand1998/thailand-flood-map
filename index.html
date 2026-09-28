@@ -146,10 +146,32 @@
   const roadMarkers=L.layerGroup().addTo(map);
   roadToggle.addEventListener('change',()=>roadToggle.checked?roadMarkers.addTo(map):map.removeLayer(roadMarkers));
   const roadTime=time=>new Intl.DateTimeFormat('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(time+'Z'))+' น.';
+  async function fetchRoadPoints(){
+    const base='https://floodbangkok.bangkok.go.th/bkk/dds/services/api/floods/v1/items/';
+    const [nowResponse,profileResponse]=await Promise.all([
+      fetch(base+'sensor_now?limit=-1',{cache:'no-store'}),
+      fetch(base+'sensor_profile?limit=-1',{cache:'no-store'})
+    ]);
+    if(!nowResponse.ok||!profileResponse.ok)throw new Error('Bangkok sensors unavailable');
+    const [now,profiles]=await Promise.all([nowResponse.json(),profileResponse.json()]);
+    if(!Array.isArray(now.data)||!Array.isArray(profiles.data))throw new Error('Invalid sensor data');
+    const profileById=new Map(profiles.data.map(profile=>[profile.id,profile]));
+    const currentTime=Date.now();
+    return now.data.flatMap(row=>{
+      const profile=profileById.get(row.sensor_profile),depthCm=Number(row.flood_now);
+      const observedAt=String(row.timestamp||''),age=currentTime-Date.parse(observedAt+'Z');
+      const lat=Number(profile?.lat),lng=Number(profile?.long);
+      if(!profile||!['normal','minor_flood','flooding'].includes(profile.device_status)||row.check_flood!==true||
+        !Number.isFinite(age)||age< -600000||age>7200000||!Number.isFinite(depthCm)||depthCm<0||depthCm>=300||
+        !Number.isFinite(lat)||!Number.isFinite(lng)||lat<13.4||lat>14.1||lng<100.2||lng>101)return[];
+      return[{name:String(profile.name||'').trim(),district:String(profile.district||'').trim(),lat,lng,depthCm,observedAt}];
+    }).filter(point=>point.name);
+  }
   async function fetchRoadFlood(){
     try{
-      const response=await fetch('/api/road-flood',{cache:'no-store'});if(!response.ok)throw new Error('Sensors unavailable');
-      const data=await response.json(), wet=data.points.filter(point=>point.depthCm>=5).sort((a,b)=>b.depthCm-a.depthCm);
+      let points;
+      try{points=await fetchRoadPoints();}catch(_){const response=await fetch('/api/road-flood',{cache:'no-store'});if(!response.ok)throw new Error('Sensors unavailable');points=(await response.json()).points;}
+      const wet=points.filter(point=>point.depthCm>=5).sort((a,b)=>b.depthCm-a.depthCm);
       roadMarkers.clearLayers();roadList.replaceChildren();
       wet.forEach((point,i)=>{
         const icon=L.divIcon({className:'road-depth-icon',html:`<span>${point.depthCm.toFixed(0)} ซม.</span>`,iconSize:[1,1]});
@@ -159,7 +181,7 @@
         marker.bindPopup(popup);
         if(i<12){const card=document.createElement('button');card.type='button';card.className='road-item';const name=document.createElement('span');name.textContent=point.name;const depth=document.createElement('strong');depth.textContent=`${point.depthCm.toFixed(0)} ซม.`;card.append(name,depth);card.addEventListener('click',()=>{map.setView([point.lat,point.lng],14);marker.openPopup();});roadList.append(card);}
       });
-      roadStatus.textContent=`พบจุดถนนมีน้ำ ≥5 ซม. ${wet.length} จุด · เซนเซอร์ใหม่ไม่เกิน 2 ชม. · สูงสุด ${wet[0]?roadTime(wet[0].observedAt):'ไม่มีจุดที่รายงานน้ำท่วม'}`;
+      roadStatus.textContent=`พบจุดถนนมีน้ำ ≥5 ซม. ${wet.length} จุด · ข้อมูลล่าสุดไม่เกิน 2 ชม.${wet[0]?' · จุดน้ำลึกสุดวัดเมื่อ '+roadTime(wet[0].observedAt):''}`;
       if(!wet.length)roadList.textContent='ไม่มีจุดที่รายงานน้ำท่วม ≥5 ซม. ในชุดข้อมูลล่าสุด (ไม่ยืนยันว่าทุกพื้นที่แห้ง)';
     }catch(_){roadStatus.textContent='โหลดจุดวัดน้ำท่วมถนนไม่ได้ โปรดตรวจจากเว็บสำนักการระบายน้ำโดยตรง';roadList.replaceChildren();roadMarkers.clearLayers();}
   }
