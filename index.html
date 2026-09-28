@@ -57,26 +57,23 @@
   basemap.on('tileerror', () => { info.innerHTML = '<span class="map-error">โหลดแผนที่ฐานไม่ได้ โปรดลองรีเฟรชหน้าเว็บ</span>'; });
   let water = Number(slider.value);
   let pending = 0, failed = 0, selected = null;
-  let waterStations=null;
-  const stationDistanceKm=(a,b)=>{const rad=Math.PI/180,dLat=(b.lat-a.lat)*rad,dLng=(b.lng-a.lng)*rad,c=Math.sin(dLat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLng/2)**2;return 12742*Math.atan2(Math.sqrt(c),Math.sqrt(1-c));};
-  function showMeasured(){
-    if(!waterStations)return;
-    const point=selected||map.getCenter();
-    const nearest=waterStations.map(station=>({station,distance:stationDistanceKm(point,station)})).sort((a,b)=>a.distance-b.distance)[0];
-    const age=nearest&&Date.now()-Date.parse(nearest.station.observedAt.replace(' ','T')+':00+07:00');
-    measuredReadout.classList.toggle('error',!nearest||nearest.distance>50||!Number.isFinite(age)||age<0||age>6*3600*1000);
-    if(!nearest||nearest.distance>50){measuredReadout.textContent='ไม่มีสถานีวัดระดับน้ำภายใน 50 กม. ของจุดที่เลือก';return;}
-    if(!Number.isFinite(age)||age<0||age>6*3600*1000){measuredReadout.textContent='สถานีที่ใกล้ที่สุดยังไม่มีข้อมูลใหม่ใน 6 ชั่วโมง';return;}
+  let measuredPoint=null;
+  function showMeasured(station){
+    measuredReadout.classList.remove('error');
     measuredReadout.replaceChildren();
-    const value=document.createElement('strong');value.textContent=`${nearest.station.levelMsl.toFixed(2)} ม.รทก.`;
-    measuredReadout.append(value,document.createElement('br'),`สถานี${nearest.station.name} · ห่าง ${nearest.distance.toFixed(0)} กม. · ${nearest.station.observedAt} น. · ${nearest.station.agency||'สสน.'}`,document.createElement('br'),'ค่านี้เป็นระดับน้ำที่สถานีในลำน้ำ ไม่ใช่ระดับน้ำท่วมทั้งพื้นที่ จึงไม่เปลี่ยนสไลด์หรือสีแผนที่');
+    const value=document.createElement('strong');value.textContent=`${station.levelMsl.toFixed(2)} ม.รทก.`;
+    measuredReadout.append(value,document.createElement('br'),`สถานี${station.name} · ห่าง ${station.distanceKm.toFixed(0)} กม. · ${station.observedAt} น. · ${station.agency||'สสน.'}`,document.createElement('br'),'ค่านี้เป็นระดับน้ำที่สถานีในลำน้ำ ไม่ใช่ระดับน้ำท่วมทั้งพื้นที่ จึงไม่เปลี่ยนสไลด์หรือสีแผนที่');
   }
   loadWaterlevel.addEventListener('click',async()=>{
     loadWaterlevel.disabled=true;measuredReadout.classList.remove('error');measuredReadout.textContent='กำลังโหลดระดับน้ำจากสถานีโทรมาตร…';
     try{
-      const response=await fetch('/api/waterlevel',{cache:'no-store'});if(!response.ok)throw new Error('No data');
-      const data=await response.json();if(!Array.isArray(data.stations)||!data.stations.length)throw new Error('No stations');
-      waterStations=data.stations;showMeasured();
+      const point=selected||map.getCenter();
+      const params=new URLSearchParams({lat:point.lat.toFixed(5),lng:point.lng.toFixed(5)});
+      const response=await fetch('/api/gauge?'+params,{cache:'no-store'});
+      if(response.status===404){measuredReadout.classList.add('error');measuredReadout.textContent='ไม่มีสถานีระดับน้ำภายใน 50 กม. ที่มีข้อมูลใหม่ใน 6 ชั่วโมง';return;}
+      if(!response.ok)throw new Error('No data');
+      const data=await response.json();if(!data.station)throw new Error('No station');
+      measuredPoint={lat:point.lat,lng:point.lng};showMeasured(data.station);
     }catch(_){measuredReadout.classList.add('error');measuredReadout.textContent='โหลดระดับน้ำตรวจวัดไม่ได้ โปรดลองอีกครั้ง';}
     finally{loadWaterlevel.disabled=false;}
   });
@@ -107,9 +104,9 @@
   const elevation = new ElevationLayer({opacity:.9, maxNativeZoom:12, maxZoom:14, updateWhenIdle:true, keepBuffer:1}).addTo(map);
   function refresh(){ water=Number(slider.value); waterValue.innerHTML=water.toFixed(1)+' <small>ม.</small>'; failed=0; info.textContent='พื้นที่สีฟ้า: ต่ำกว่าระดับน้ำที่เลือก'; elevation.redraw(); if(selected) showPoint(selected); }
   slider.addEventListener('input', refresh);
-  document.querySelectorAll('.place').forEach(button => button.addEventListener('click', () => {selected=null;map.setView([Number(button.dataset.lat),Number(button.dataset.lng)],Number(button.dataset.z));if(waterStations)showMeasured();}));
+  document.querySelectorAll('.place').forEach(button => button.addEventListener('click', () => {selected=null;map.setView([Number(button.dataset.lat),Number(button.dataset.lng)],Number(button.dataset.z));if(measuredPoint)measuredReadout.textContent='เปลี่ยนพื้นที่แล้ว กดปุ่มเพื่ออ่านสถานีใกล้จุดใหม่';}));
   async function showPoint(latlng){
-    selected=latlng;if(waterStations)showMeasured(); const p=map.project(latlng, Math.min(map.getZoom(),12)); const z=Math.min(map.getZoom(),12); const x=Math.floor(p.x/256), y=Math.floor(p.y/256);
+    selected=latlng;if(measuredPoint)measuredReadout.textContent='เปลี่ยนจุดแล้ว กดปุ่มเพื่ออ่านสถานีใกล้จุดใหม่'; const p=map.project(latlng, Math.min(map.getZoom(),12)); const z=Math.min(map.getZoom(),12); const x=Math.floor(p.x/256), y=Math.floor(p.y/256);
     pointTitle.textContent=`${latlng.lat.toFixed(4)}°, ${latlng.lng.toFixed(4)}°`;
     pointDetail.textContent='กำลังอ่านความสูง…';
     try {
