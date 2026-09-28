@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>แผนที่จำลองพื้นที่ต่ำเสี่ยงน้ำท่วม · ประเทศไทย</title>
+  <meta name="description" content="ทดลองปรับระดับน้ำและสำรวจความสูงภูมิประเทศบนแผนที่ประเทศไทย">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230c3349'/%3E%3Cpath d='M8 40q8-8 16 0t16 0 16 0M8 50q8-8 16 0t16 0 16 0' fill='none' stroke='%2355d4e8' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <style>
+    :root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:#173344;background:#eef5f7;font-size:16px}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}.shell{height:100dvh;min-height:620px;display:grid;grid-template-rows:auto 1fr}.topbar{height:68px;background:#0c3349;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:16px}.brand{display:flex;align-items:center;gap:13px;font-size:1.07rem;font-weight:750}.mark{height:33px;width:33px;border-radius:9px;background:#1a6074;display:grid;place-items:center;color:#78e3ee;font-size:22px}.topnote{color:#b6d5df;font-size:.9rem}.workspace{min-height:0;display:grid;grid-template-columns:360px minmax(0,1fr)}.panel{background:#fff;box-shadow:7px 0 28px #13394a14;z-index:500;overflow:auto;padding:28px}.eyebrow{margin:0 0 9px;font-size:.78rem;font-weight:800;letter-spacing:.09em;color:#437b8d}.panel h1{font-size:1.65rem;line-height:1.35;margin:0 0 10px}.intro{margin:0 0 27px;color:#4e6874;line-height:1.65}.control{background:#f3f8fa;border:1px solid #dce9ed;border-radius:16px;padding:19px;margin-bottom:23px}.control-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.control label{font-weight:750}.value{font-size:1.7rem;color:#07688b;font-weight:800;white-space:nowrap}.value small{font-size:.9rem}input[type=range]{width:100%;accent-color:#08779d;margin:20px 0 5px;cursor:pointer}.range-ends{display:flex;justify-content:space-between;color:#66818e;font-size:.8rem}.hint{font-size:.86rem;color:#55717d;line-height:1.6;margin:16px 0 0}.section-title{font-size:.9rem;font-weight:800;margin:25px 0 12px}.places{display:flex;flex-wrap:wrap;gap:8px}.place{border:1px solid #d2e3e9;background:white;color:#235166;border-radius:99px;padding:9px 13px;font-weight:650;font-size:.87rem}.place:hover,.place:focus-visible{background:#eaf7fb;border-color:#7bbfd2}.readout{margin-top:26px;border-top:1px solid #e0eaed;padding-top:21px;min-height:108px}.readout .label{color:#5c7c88;font-size:.85rem;margin-bottom:8px}.readout strong{font-size:1.08rem}.readout p{color:#5c7580;line-height:1.5;font-size:.88rem;margin:6px 0 0}.notice{margin-top:24px;padding:14px 15px;border-radius:12px;background:#fff8e9;border:1px solid #f3e2b5;color:#715725;font-size:.84rem;line-height:1.57}.mapwrap{position:relative;min-width:0;min-height:0}.map{width:100%;height:100%;background:#d9e9eb}.map-info{position:absolute;right:16px;top:16px;z-index:400;background:#fffffff2;border:1px solid #d7e5e9;border-radius:11px;box-shadow:0 5px 20px #163b4a1a;padding:11px 14px;font-size:.82rem;color:#375c69;max-width:250px}.legend{position:absolute;bottom:28px;right:16px;z-index:400;background:#fffffff2;border:1px solid #d7e5e9;border-radius:11px;padding:12px 14px;font-size:.82rem;box-shadow:0 5px 20px #163b4a1a}.legend-row{display:flex;align-items:center;gap:8px;margin:5px 0}.swatch{width:18px;height:12px;border-radius:3px;background:#008dcbab}.swatch.deep{background:#00598fd6}.loading{position:absolute;z-index:450;left:50%;top:18px;transform:translateX(-50%);padding:9px 14px;background:#143c4dec;color:white;border-radius:100px;font-size:.82rem;white-space:nowrap;pointer-events:none;display:none}.loading.show{display:block}.leaflet-container{font:inherit}.leaflet-control-attribution{font-size:11px!important}.map-error{color:#9a321f;font-weight:650}@media(max-width:760px){.shell{height:auto;min-height:100dvh;display:flex;flex-direction:column}.topbar{height:58px;padding:0 16px}.topnote{display:none}.workspace{display:flex;flex-direction:column}.panel{padding:19px;box-shadow:none}.panel h1{font-size:1.35rem}.intro{margin-bottom:15px}.control{margin-bottom:8px}.readout{margin-top:14px;min-height:auto}.notice{margin-top:14px}.mapwrap{height:58dvh;min-height:350px}.map-info{right:10px;top:10px;max-width:180px}.legend{right:10px;bottom:24px}}
+  </style>
+  <style>
+    .feed-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:22px}.feed-head h2{font-size:1rem;margin:0}.feed-head p{font-size:.76rem;color:#617b87;margin:5px 0 0}.refresh{border:1px solid #b9d8e2;border-radius:9px;background:#eef9fc;color:#075f79;padding:8px 10px;font-size:.8rem;font-weight:700;white-space:nowrap}.refresh:disabled{opacity:.5;cursor:wait}.feed-status{font-size:.8rem;color:#55717d;margin:10px 0}.feed-status.error{color:#a03223}.rain-list{display:grid;gap:8px;max-height:304px;overflow:auto;padding-right:3px}.rain-card{border:1px solid #dce8ec;background:white;border-radius:12px;padding:11px 12px;text-align:left;width:100%;display:grid;grid-template-columns:1fr auto;gap:2px 8px}.rain-card.active{border-color:#0a86aa;background:#eef9fc}.rain-card b{font-size:.86rem}.rain-card .rain-n{font-size:.86rem;font-weight:800;color:#0b6685}.rain-card small{color:#607984;font-size:.72rem}.model-box{margin-top:17px;padding:14px;border-radius:12px;background:#eaf5f8;border:1px solid #cfe4e9}.model-box h2{margin:0 0 7px;font-size:.9rem}.model-box .estimate{font-size:1.4rem;font-weight:850;color:#075c7b;margin:4px 0}.model-box p{font-size:.78rem;line-height:1.48;color:#4e6c79;margin:5px 0}.source-link{color:#0b6988}.feed-note{font-size:.75rem;line-height:1.5;color:#637c87;margin:8px 0 0}@media(max-width:760px){.rain-list{max-height:180px}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar"><div class="brand"><span class="mark" aria-hidden="true">≋</span><span>น้ำท่วมไทย · แผนที่ทดลอง</span></div><div class="topnote">สำรวจความสูงของแต่ละพื้นที่</div></header>
+  <main class="workspace">
+    <aside class="panel">
+      <p class="eyebrow">สำรวจสถานการณ์</p>
+      <h1>ถ้าน้ำสูงขึ้น พื้นที่ไหนต่ำกว่า?</h1>
+      <p class="intro">เลื่อนระดับน้ำแล้วดูพื้นที่ต่ำบนแผนที่ แตะจุดที่สนใจเพื่อดูความสูงพื้นดินโดยประมาณ</p>
+      <div class="control"><div class="control-head"><label for="water">ระดับน้ำสมมติ</label><span class="value" id="water-value">2.0 <small>ม.</small></span></div><input id="water" type="range" min="0" max="20" value="2" step="0.5" aria-describedby="water-help"><div class="range-ends"><span>0 ม.</span><span>20 ม.</span></div><p class="hint" id="water-help">เทียบกับระดับน้ำทะเลปานกลางโดยประมาณ</p></div>
+      <p class="section-title">ไปยังพื้นที่</p><div class="places"><button class="place" data-lat="13.7563" data-lng="100.5018" data-z="11">กรุงเทพฯ</button><button class="place" data-lat="13.3611" data-lng="100.9847" data-z="11">ชลบุรี</button><button class="place" data-lat="7.8804" data-lng="98.3923" data-z="11">ภูเก็ต</button><button class="place" data-lat="18.7883" data-lng="98.9853" data-z="11">เชียงใหม่</button></div>
+      <div class="readout" aria-live="polite"><div class="label">ตำแหน่งที่เลือก</div><strong id="point-title">แตะบนแผนที่</strong><p id="point-detail">จะแสดงความสูงพื้นดินและผลเทียบกับระดับน้ำที่เลือก</p></div>
+      <div class="feed-head"><div><h2>ฝนรายพื้นที่</h2><p>ข้อมูลแบบจำลองอากาศ อัปเดตเมื่อเปิดเว็บ</p></div><button id="refresh-rain" class="refresh" type="button">↻ อัปเดต</button></div>
+      <p id="feed-status" class="feed-status" role="status">กำลังโหลดข้อมูลฝน…</p>
+      <div id="rain-list" class="rain-list" aria-label="ปริมาณฝนรายพื้นที่"></div>
+      <div id="model-box" class="model-box" aria-live="polite"><h2>สถานการณ์น้ำขังจากฝน</h2><div id="estimate" class="estimate">รอข้อมูลฝน</div><p id="estimate-detail">เลือกพื้นที่เพื่อดูผล</p></div>
+      <p class="feed-note">ฝนย้อนหลังในหน้านี้เป็นค่าจากแบบจำลองอากาศ ไม่ใช่ผลวัดจากสถานี · <a class="source-link" href="https://www.tmd.go.th/warning-and-events" target="_blank" rel="noopener">ประกาศเตือนภัยกรมอุตุนิยมวิทยา ↗</a></p>
+      <div class="notice">แผนที่นี้ระบายสีพื้นที่ที่ระดับพื้นดินต่ำกว่าระดับน้ำสมมติ ใช้สำรวจเบื้องต้นเท่านั้น ยังไม่คำนวณทางไหล คันกั้นน้ำ ระบบระบายน้ำ หรือระดับน้ำจริงในพื้นที่</div>
+    </aside>
+    <section class="mapwrap" aria-label="แผนที่ภูมิประเทศประเทศไทย"><div id="map" class="map"></div><div id="loading" class="loading" role="status">กำลังโหลดข้อมูลความสูง…</div><div class="map-info" id="map-info">พื้นที่สีฟ้า: ต่ำกว่าระดับน้ำที่เลือก</div><div class="legend"><div class="legend-row"><span class="swatch"></span><span>ต่ำกว่าเล็กน้อย</span></div><div class="legend-row"><span class="swatch deep"></span><span>ต่ำกว่ามาก</span></div></div></section>
+  </main>
+</div>
+<script src="vendor/leaflet.js"></script>
+<script>
+(() => {
+  const hosted = location.protocol !== 'file:';
+  const tileUrl = (z,x,y) => hosted ? `/api/tile?kind=elevation&z=${z}&x=${x}&y=${y}` : `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`;
+  const decode = (r,g,b) => r * 256 + g + b / 256 - 32768;
+  const slider = document.getElementById('water');
+  const waterValue = document.getElementById('water-value');
+  const loading = document.getElementById('loading');
+  const info = document.getElementById('map-info');
+  const pointTitle = document.getElementById('point-title');
+  const pointDetail = document.getElementById('point-detail');
+  const map = L.map('map', {zoomControl:true, minZoom:6, maxZoom:14}).setView([13.7563,100.5018], 11);
+  const baseUrl = hosted ? '/api/tile?kind=base&z={z}&x={x}&y={y}' : 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+  const basemap = L.tileLayer(baseUrl, {attribution:'แผนที่ © <a href="https://www.esri.com/">Esri</a> · ความสูง <a href="https://registry.opendata.aws/terrain-tiles/">AWS Terrain Tiles</a>', maxZoom:19}).addTo(map);
+  basemap.on('tileerror', () => { info.innerHTML = '<span class="map-error">โหลดแผนที่ฐานไม่ได้ โปรดลองรีเฟรชหน้าเว็บ</span>'; });
+  let water = Number(slider.value);
+  let pending = 0, failed = 0, selected = null;
+  const updateStatus = () => { loading.classList.toggle('show', pending > 0); if (failed) info.innerHTML = '<span class="map-error">โหลดข้อมูลความสูงบางส่วนไม่ได้ โปรดลองใหม่ภายหลัง</span>'; };
+  const ElevationLayer = L.GridLayer.extend({
+    createTile(coords, done) {
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 256;
+      const context = canvas.getContext('2d', {willReadFrequently:true});
+      const img = new Image(); img.crossOrigin = 'anonymous';
+      pending++; updateStatus();
+      img.onload = () => {
+        try {
+          context.drawImage(img,0,0); const image = context.getImageData(0,0,256,256); const data = image.data;
+          for(let i=0;i<data.length;i+=4){
+            const h=decode(data[i],data[i+1],data[i+2]); const depth=water-h;
+            if (depth <= 0) { data[i+3]=0; continue; }
+            data[i]=depth>3?0:0; data[i+1]=depth>3?82:143; data[i+2]=depth>3?143:203; data[i+3]=depth>3?190:138;
+          }
+          context.putImageData(image,0,0); done(null,canvas);
+        } catch(e) { failed++; updateStatus(); done(e,canvas); }
+        pending--; updateStatus();
+      };
+      img.onerror = () => { failed++; pending--; updateStatus(); done(new Error('DEM unavailable'),canvas); };
+      img.src = tileUrl(coords.z,coords.x,coords.y);
+      return canvas;
+    }
+  });
+  const elevation = new ElevationLayer({opacity:.9, maxNativeZoom:12, maxZoom:14, updateWhenIdle:true, keepBuffer:1}).addTo(map);
+  function refresh(){ water=Number(slider.value); waterValue.innerHTML=water.toFixed(1)+' <small>ม.</small>'; failed=0; info.textContent='พื้นที่สีฟ้า: ต่ำกว่าระดับน้ำที่เลือก'; elevation.redraw(); if(selected) showPoint(selected); }
+  slider.addEventListener('input', refresh);
+  document.querySelectorAll('.place').forEach(button => button.addEventListener('click', () => map.setView([Number(button.dataset.lat),Number(button.dataset.lng)],Number(button.dataset.z))));
+  async function showPoint(latlng){
+    selected=latlng; const p=map.project(latlng, Math.min(map.getZoom(),12)); const z=Math.min(map.getZoom(),12); const x=Math.floor(p.x/256), y=Math.floor(p.y/256);
+    pointTitle.textContent=`${latlng.lat.toFixed(4)}°, ${latlng.lng.toFixed(4)}°`;
+    pointDetail.textContent='กำลังอ่านความสูง…';
+    try {
+      const img=new Image(); img.crossOrigin='anonymous'; img.src=tileUrl(z,x,y); await img.decode();
+      const c=document.createElement('canvas'); c.width=c.height=1; const cx=c.getContext('2d'); cx.drawImage(img,Math.floor(p.x-x*256),Math.floor(p.y-y*256),1,1,0,0,1,1);
+      const d=cx.getImageData(0,0,1,1).data; const h=decode(d[0],d[1],d[2]);
+      const gap=water-h; pointDetail.textContent=`พื้นดินสูงประมาณ ${h.toFixed(1)} ม. ${gap>0?`ต่ำกว่าระดับน้ำสมมติ ${gap.toFixed(1)} ม.`:`สูงกว่าระดับน้ำสมมติ ${Math.abs(gap).toFixed(1)} ม.`}`;
+    } catch(e) { pointDetail.textContent='อ่านความสูงจุดนี้ไม่ได้ กรุณาลองอีกครั้ง'; }
+  }
+  map.on('click',e=>showPoint(e.latlng));
+  const areas = [
+    {name:'กรุงเทพฯ',lat:13.7563,lng:100.5018},
+    {name:'พระนครศรีอยุธยา',lat:14.3532,lng:100.5689},
+    {name:'นครสวรรค์',lat:15.7030,lng:100.1372},
+    {name:'เชียงใหม่',lat:18.7883,lng:98.9853},
+    {name:'ขอนแก่น',lat:16.4419,lng:102.8359},
+    {name:'อุบลราชธานี',lat:15.2448,lng:104.8473},
+    {name:'ชลบุรี',lat:13.3611,lng:100.9847},
+    {name:'ภูเก็ต',lat:7.8804,lng:98.3923},
+    {name:'สงขลา',lat:7.1898,lng:100.5951}
+  ];
+  const feedStatus=document.getElementById('feed-status');
+  const rainList=document.getElementById('rain-list');
+  const refreshButton=document.getElementById('refresh-rain');
+  const estimate=document.getElementById('estimate');
+  const estimateDetail=document.getElementById('estimate-detail');
+  const markers=L.layerGroup().addTo(map);
+  let rainData=null, activeArea=0;
+  const sum=(values, times, start, end) => values.reduce((total,value,i) => { const time=Date.parse(times[i]+'+07:00'); return time>=start && time<end ? total+(Number(value)||0) : total; },0);
+  function scenario(past,next){
+    // Illustrative urban drainage scenario only. It is not a calibrated flood forecast.
+    const equivalent=Math.max(0,(past*.3+next*.7)-30)*1.5/10;
+    if(equivalent<5) return {text:'0–5 ซม.',severity:0};
+    if(equivalent<15) return {text:'5–15 ซม.',severity:1};
+    if(equivalent<30) return {text:'15–30 ซม.',severity:2};
+    return {text:'มากกว่า 30 ซม.',severity:3};
+  }
+  function showArea(index,pan=true){
+    activeArea=index;
+    const area=areas[index], data=rainData?.[index];
+    if(pan)map.setView([area.lat,area.lng],11);
+    document.querySelectorAll('.rain-card').forEach((el,i)=>el.classList.toggle('active',i===index));
+    if(!data){ estimate.textContent='ไม่มีข้อมูล'; estimateDetail.textContent='ลองอัปเดตข้อมูลฝนอีกครั้ง'; return; }
+    const result=scenario(data.past,data.next);
+    estimate.textContent=result.text;
+    estimateDetail.textContent=`${area.name}: น้ำขังตามสมมติฐานจากฝนที่ผ่านมาและฝนคาดการณ์ 24 ชม. ระบายน้ำได้ 30 มม./วัน ตัวเลขนี้ไม่ใช่ระดับน้ำท่วมจริง`;
+  }
+  function renderRain(){
+    rainList.replaceChildren(); markers.clearLayers();
+    if(!rainData)return;
+    areas.forEach((area,i)=>{
+      const data=rainData[i], result=scenario(data.past,data.next);
+      const card=document.createElement('button'); card.type='button'; card.className='rain-card'+(i===activeArea?' active':'');
+      const name=document.createElement('b'); name.textContent=area.name;
+      const amount=document.createElement('span'); amount.className='rain-n'; amount.textContent=`${data.next.toFixed(0)} มม.`;
+      const details=document.createElement('small'); details.textContent=`ฝนคาดการณ์ 24 ชม. · ที่ผ่านมา ${data.past.toFixed(0)} มม.`;
+      card.append(name,amount,details); card.addEventListener('click',()=>showArea(i)); rainList.append(card);
+      const color=['#5caec4','#f4b345','#ed783d','#cf3d36'][result.severity];
+      const marker=L.circleMarker([area.lat,area.lng],{radius:9,color:'#fff',weight:2,fillColor:color,fillOpacity:1,bubblingMouseEvents:false}).addTo(markers);
+      marker.bindTooltip(`${area.name}: ฝน 24 ชม. ข้างหน้า ${data.next.toFixed(0)} มม. · สถานการณ์น้ำขัง ${result.text}`);
+      marker.on('click',()=>showArea(i));
+    });
+    showArea(activeArea,false);
+  }
+  async function fetchRain(){
+    refreshButton.disabled=true; feedStatus.classList.remove('error'); feedStatus.textContent='กำลังอัปเดตข้อมูลฝน…';
+    try{
+      const params=new URLSearchParams({latitude:areas.map(a=>a.lat).join(','),longitude:areas.map(a=>a.lng).join(','),hourly:'precipitation',past_days:'2',forecast_days:'2',timezone:'Asia/Bangkok'});
+      const response=await fetch((hosted?'/api/weather?':'https://api.open-meteo.com/v1/forecast?')+params,{cache:'no-store'});
+      if(!response.ok)throw new Error('weather service unavailable');
+      const raw=await response.json(), list=Array.isArray(raw)?raw:[raw];
+      if(list.length!==areas.length)throw new Error('missing areas');
+      const now=Date.now(), day=24*3600*1000;
+      rainData=list.map(item=>{
+        if(!item.hourly?.time || !item.hourly?.precipitation)throw new Error('missing rainfall');
+        return {past:sum(item.hourly.precipitation,item.hourly.time,now-day,now),next:sum(item.hourly.precipitation,item.hourly.time,now,now+day)};
+      });
+      const time=new Intl.DateTimeFormat('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date());
+      feedStatus.textContent=`อัปเดต ${time} น. · แหล่งข้อมูล Open-Meteo`;
+      renderRain();
+    }catch(e){feedStatus.classList.add('error');feedStatus.textContent='โหลดข้อมูลฝนไม่ได้ ตรวจอินเทอร์เน็ตแล้วกดอัปเดตอีกครั้ง'; if(!rainData){estimate.textContent='ไม่มีข้อมูลฝน';estimateDetail.textContent='ยังไม่แสดงค่าจำลองจนกว่าจะโหลดข้อมูลได้';}}
+    finally{refreshButton.disabled=false;}
+  }
+  refreshButton.addEventListener('click',fetchRain);
+  map.on('click',async e=>{
+    estimate.textContent='กำลังคำนวณ…'; estimateDetail.textContent='กำลังโหลดฝนสำหรับจุดที่เลือก';
+    try{
+      const params=new URLSearchParams({latitude:e.latlng.lat.toFixed(5),longitude:e.latlng.lng.toFixed(5),hourly:'precipitation',past_days:'2',forecast_days:'2',timezone:'Asia/Bangkok'});
+      const response=await fetch((hosted?'/api/weather?':'https://api.open-meteo.com/v1/forecast?')+params);
+      if(!response.ok)throw new Error('weather service unavailable');
+      const item=await response.json(), now=Date.now(), day=24*3600*1000;
+      const past=sum(item.hourly.precipitation,item.hourly.time,now-day,now);
+      const next=sum(item.hourly.precipitation,item.hourly.time,now,now+day);
+      estimate.textContent=scenario(past,next).text;
+      estimateDetail.textContent=`จุดที่เลือก: ฝนย้อนหลังจากแบบจำลอง ${past.toFixed(0)} มม. และคาดการณ์ 24 ชม. ${next.toFixed(0)} มม. ค่าน้ำขังใช้สมมติฐานระบายน้ำได้ 30 มม./วัน ไม่ใช่ระดับน้ำท่วมจริง`;
+      document.querySelectorAll('.rain-card').forEach(el=>el.classList.remove('active'));
+    }catch(error){estimate.textContent='คำนวณไม่ได้';estimateDetail.textContent='โหลดข้อมูลฝนของจุดนี้ไม่ได้ กรุณาลองอีกครั้ง';}
+  });
+  fetchRain(); setInterval(fetchRain,15*60*1000);
+})();
+</script>
+</body>
+</html>
