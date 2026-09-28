@@ -33,7 +33,8 @@ module.exports = async function handler(req, res) {
     if (!points.length) throw new Error('No recent road sensors');
     res.setHeader('Cache-Control', 'public, max-age=120, s-maxage=300');
     return res.status(200).json({ source: 'สำนักการระบายน้ำ กรุงเทพมหานคร', points });
-  } catch (_) {
-    return res.status(502).json({ error: 'Bangkok road sensors unavailable' });
+  } catch (error) {
+    console.error('Bangkok road sensors unavailable', error);
+    return res.status(502).json({ error: 'Bangkok road sensors unavailable', detail: String(error?.message || error) });
   }
 };
