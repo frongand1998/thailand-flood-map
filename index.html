@@ -29,7 +29,7 @@
       <div class="mode-switch" role="group" aria-label="เลือกโหมดข้อมูลฝน"><button id="mode-observed" class="active" type="button" aria-pressed="true">ฝนตรวจวัด</button><button id="mode-simulated" type="button" aria-pressed="false">จำลอง</button></div>
       <p id="feed-status" class="feed-status" role="status">กำลังโหลดข้อมูลฝน…</p>
       <div id="rain-list" class="rain-list" aria-label="ปริมาณฝนรายพื้นที่"></div>
-      <div id="model-box" class="model-box" aria-live="polite"><h2>สถานการณ์น้ำขังจากฝน</h2><div id="estimate" class="estimate">รอข้อมูลฝน</div><p id="estimate-detail">เลือกพื้นที่เพื่อดูผล</p></div>
+      <div id="model-box" class="model-box" aria-live="polite"><h2 id="estimate-heading">ฝนตรวจวัดที่สถานีใกล้พื้นที่</h2><div id="estimate" class="estimate">รอข้อมูลฝน</div><p id="estimate-detail">เลือกพื้นที่เพื่อดูผล</p></div>
       <p id="feed-note" class="feed-note">ข้อมูลตรวจวัดเป็นฝน 24 ชั่วโมงสิ้นสุดเวลา 07:00 น. ที่สถานีใกล้พื้นที่ ไม่ใช่ฝนที่ตก ณ จุดนั้นแบบนาทีต่อนาที · <a class="source-link" href="https://www.tmd.go.th/climate/daily" target="_blank" rel="noopener">กรมอุตุนิยมวิทยา ↗</a></p>
       <div class="notice">แผนที่นี้ระบายสีพื้นที่ที่ระดับพื้นดินต่ำกว่าระดับน้ำสมมติ ใช้สำรวจเบื้องต้นเท่านั้น ยังไม่คำนวณทางไหล คันกั้นน้ำ ระบบระบายน้ำ หรือระดับน้ำจริงในพื้นที่</div>
     </aside>
@@ -109,6 +109,7 @@
   const rainList=document.getElementById('rain-list');
   const refreshButton=document.getElementById('refresh-rain');
   const estimate=document.getElementById('estimate');
+  const estimateHeading=document.getElementById('estimate-heading');
   const estimateDetail=document.getElementById('estimate-detail');
   const feedSubtitle=document.getElementById('feed-subtitle');
   const feedNote=document.getElementById('feed-note');
@@ -206,6 +207,7 @@
   }
   function setMode(next){
     mode=next;for(const [key,button] of Object.entries(modeButtons)){const active=key===mode;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));}
+    estimateHeading.textContent=mode==='observed'?'ฝนตรวจวัดที่สถานีใกล้พื้นที่':'สถานการณ์น้ำขังจากฝน';
     feedSubtitle.textContent=mode==='observed'?'ฝนตรวจวัดจากสถานีกรมอุตุนิยมวิทยา':'ฝนคาดการณ์และสถานการณ์น้ำขังตามสมมติฐาน';
     feedNote.innerHTML=mode==='observed'?'ข้อมูลตรวจวัดเป็นฝน 24 ชั่วโมงสิ้นสุดเวลา 07:00 น. ที่สถานีใกล้พื้นที่ ไม่ใช่ฝน ณ จุดนั้นแบบนาทีต่อนาที · <a class="source-link" href="https://www.tmd.go.th/climate/daily" target="_blank" rel="noopener">กรมอุตุนิยมวิทยา ↗</a>':'ฝนจากแบบจำลองอากาศ Open-Meteo ไม่ใช่ผลวัดจากสถานี · <a class="source-link" href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">ข้อมูล Open-Meteo ↗</a>';
     renderRain();if(mode==='observed'){if(!observations)fetchObserved();else feedStatus.textContent=`กรมอุตุนิยมวิทยา · ตรวจวัด ${observations[0].observedAt.slice(0,16)} น. (ฝน 24 ชม. ถึง 07:00 น.)`;}else{if(!rainData)fetchRain();else feedStatus.textContent='แหล่งข้อมูล Open-Meteo · กดอัปเดตเพื่อดึงข้อมูลล่าสุด';}
