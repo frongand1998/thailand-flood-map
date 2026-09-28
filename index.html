@@ -13,6 +13,7 @@
   <style>
     .feed-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:22px}.feed-head h2{font-size:1rem;margin:0}.feed-head p{font-size:.76rem;color:#617b87;margin:5px 0 0}.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;margin-top:13px;background:#eaf3f6;border-radius:11px}.mode-switch button{border:0;border-radius:8px;padding:9px 5px;background:transparent;color:#476977;font-size:.83rem;font-weight:750}.mode-switch button.active{background:white;color:#075f79;box-shadow:0 2px 9px #163b4a20}.refresh{border:1px solid #b9d8e2;border-radius:9px;background:#eef9fc;color:#075f79;padding:8px 10px;font-size:.8rem;font-weight:700;white-space:nowrap}.refresh:disabled{opacity:.5;cursor:wait}.feed-status{font-size:.8rem;color:#55717d;margin:10px 0}.feed-status.error{color:#a03223}.rain-list{display:grid;gap:8px;max-height:304px;overflow:auto;padding-right:3px}.rain-card{border:1px solid #dce8ec;background:white;border-radius:12px;padding:11px 12px;text-align:left;width:100%;display:grid;grid-template-columns:1fr auto;gap:2px 8px}.rain-card.active{border-color:#0a86aa;background:#eef9fc}.rain-card b{font-size:.86rem}.rain-card .rain-n{font-size:.86rem;font-weight:800;color:#0b6685}.rain-card small{color:#607984;font-size:.72rem}.model-box{margin-top:17px;padding:14px;border-radius:12px;background:#eaf5f8;border:1px solid #cfe4e9}.model-box h2{margin:0 0 7px;font-size:.9rem}.model-box .estimate{font-size:1.4rem;font-weight:850;color:#075c7b;margin:4px 0}.model-box p{font-size:.78rem;line-height:1.48;color:#4e6c79;margin:5px 0}.source-link{color:#0b6988}.feed-note{font-size:.75rem;line-height:1.5;color:#637c87;margin:8px 0 0}@media(max-width:760px){.rain-list{max-height:180px}}
     .measured-button{margin-top:14px;width:100%;padding:10px 12px;border:1px solid #95c8d7;border-radius:9px;background:#fff;color:#075f79;font-size:.84rem;font-weight:750;text-align:center}.measured-button:disabled{opacity:.55;cursor:wait}.measured-readout{margin:11px 0 0;font-size:.78rem;line-height:1.55;color:#456875}.measured-readout strong{color:#075f79;font-size:1rem}.measured-readout.error{color:#a03223}
+    .road-panel{margin-top:20px;padding:15px;border:1px solid #d7e5e9;border-radius:13px;background:#f7fafb}.road-panel h2{margin:0 0 5px;font-size:.95rem}.road-panel p{margin:6px 0;font-size:.77rem;line-height:1.5;color:#53707b}.road-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.road-toggle{display:flex;align-items:center;gap:5px;color:#285669;font-size:.78rem;white-space:nowrap}.road-list{max-height:170px;overflow:auto;margin-top:9px;display:grid;gap:6px}.road-item{width:100%;display:flex;justify-content:space-between;gap:8px;text-align:left;border:1px solid #e0eaed;background:#fff;border-radius:8px;padding:8px;font-size:.78rem}.road-item strong{color:#a63e22;white-space:nowrap}.road-depth-icon{background:transparent;border:0}.road-depth-icon span{display:block;width:max-content;min-width:49px;padding:4px 6px;border-radius:8px;background:#bd472c;color:white;border:2px solid white;box-shadow:0 2px 10px #17334466;font-size:12px;font-weight:800;text-align:center;transform:translate(-50%,-100%)}
   </style>
 </head>
 <body>
@@ -26,6 +27,7 @@
       <div class="control"><div class="control-head"><label for="water">ระดับน้ำสมมติ</label><span class="value" id="water-value">2.0 <small>ม.</small></span></div><input id="water" type="range" min="0" max="20" value="2" step="0.5" aria-describedby="water-help"><div class="range-ends"><span>0 ม.</span><span>20 ม.</span></div><p class="hint" id="water-help">เทียบกับระดับน้ำทะเลปานกลางโดยประมาณ · สไลด์นี้ยังไม่ใช่ระดับน้ำจริง</p><button id="load-waterlevel" class="measured-button" type="button">ดูระดับน้ำตรวจวัดใกล้จุดที่เลือก</button><p id="measured-readout" class="measured-readout" role="status">เลือกจุดบนแผนที่ หรือเลื่อนไปยังพื้นที่ แล้วกดปุ่มเพื่อดูค่าที่สถานีใกล้ที่สุด</p></div>
       <p class="section-title">ไปยังพื้นที่</p><div class="places"><button class="place" data-lat="13.7563" data-lng="100.5018" data-z="11">กรุงเทพฯ</button><button class="place" data-lat="13.3611" data-lng="100.9847" data-z="11">ชลบุรี</button><button class="place" data-lat="7.8804" data-lng="98.3923" data-z="11">ภูเก็ต</button><button class="place" data-lat="18.7883" data-lng="98.9853" data-z="11">เชียงใหม่</button></div>
       <div class="readout" aria-live="polite"><div class="label">ตำแหน่งที่เลือก</div><strong id="point-title">แตะบนแผนที่</strong><p id="point-detail">จะแสดงความสูงพื้นดินและผลเทียบกับระดับน้ำที่เลือก</p></div>
+      <div class="road-panel"><div class="road-head"><h2>น้ำท่วมถนนตรวจวัด · กทม.</h2><label class="road-toggle"><input id="road-toggle" type="checkbox" checked> แสดงบนแผนที่</label></div><p id="road-status" role="status">กำลังโหลดจุดวัดน้ำท่วมถนน…</p><div id="road-list" class="road-list" aria-label="จุดวัดน้ำท่วมถนนล่าสุด"></div><p>ตัวเลขเป็นความลึกบนถนน ณ จุดเซนเซอร์ ไม่ใช่ระดับน้ำในบ้านหรือทั้งเขต · <a class="source-link" href="https://floodbangkok.bangkok.go.th/" target="_blank" rel="noopener">สำนักการระบายน้ำ กทม. ↗</a></p></div>
       <div class="feed-head"><div><h2>ฝนรายพื้นที่</h2><p id="feed-subtitle">ฝนตรวจวัดจากสถานีกรมอุตุนิยมวิทยา</p></div><button id="refresh-rain" class="refresh" type="button">↻ อัปเดต</button></div>
       <div class="mode-switch" role="group" aria-label="เลือกโหมดข้อมูลฝน"><button id="mode-observed" class="active" type="button" aria-pressed="true">ฝนตรวจวัด</button><button id="mode-simulated" type="button" aria-pressed="false">จำลอง</button></div>
       <p id="feed-status" class="feed-status" role="status">กำลังโหลดข้อมูลฝน…</p>
@@ -134,10 +136,33 @@
   const estimate=document.getElementById('estimate');
   const estimateHeading=document.getElementById('estimate-heading');
   const estimateDetail=document.getElementById('estimate-detail');
+  const roadStatus=document.getElementById('road-status');
+  const roadList=document.getElementById('road-list');
+  const roadToggle=document.getElementById('road-toggle');
   const feedSubtitle=document.getElementById('feed-subtitle');
   const feedNote=document.getElementById('feed-note');
   const modeButtons={observed:document.getElementById('mode-observed'),simulated:document.getElementById('mode-simulated')};
   const markers=L.layerGroup().addTo(map);
+  const roadMarkers=L.layerGroup().addTo(map);
+  roadToggle.addEventListener('change',()=>roadToggle.checked?roadMarkers.addTo(map):map.removeLayer(roadMarkers));
+  const roadTime=time=>new Intl.DateTimeFormat('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(time+'Z'))+' น.';
+  async function fetchRoadFlood(){
+    try{
+      const response=await fetch('/api/road-flood',{cache:'no-store'});if(!response.ok)throw new Error('Sensors unavailable');
+      const data=await response.json(), wet=data.points.filter(point=>point.depthCm>=5).sort((a,b)=>b.depthCm-a.depthCm);
+      roadMarkers.clearLayers();roadList.replaceChildren();
+      wet.forEach((point,i)=>{
+        const icon=L.divIcon({className:'road-depth-icon',html:`<span>${point.depthCm.toFixed(0)} ซม.</span>`,iconSize:[1,1]});
+        const marker=L.marker([point.lat,point.lng],{icon}).addTo(roadMarkers);
+        const popup=document.createElement('div');const title=document.createElement('strong');title.textContent=point.name;
+        popup.append(title,document.createElement('br'),`น้ำท่วมถนน ${point.depthCm.toFixed(1)} ซม. · ${roadTime(point.observedAt)}`,document.createElement('br'),'ตรวจวัดที่จุดนี้เท่านั้น ไม่ใช่ระดับน้ำในบ้าน');
+        marker.bindPopup(popup);
+        if(i<12){const card=document.createElement('button');card.type='button';card.className='road-item';const name=document.createElement('span');name.textContent=point.name;const depth=document.createElement('strong');depth.textContent=`${point.depthCm.toFixed(0)} ซม.`;card.append(name,depth);card.addEventListener('click',()=>{map.setView([point.lat,point.lng],14);marker.openPopup();});roadList.append(card);}
+      });
+      roadStatus.textContent=`พบจุดถนนมีน้ำ ≥5 ซม. ${wet.length} จุด · เซนเซอร์ใหม่ไม่เกิน 2 ชม. · สูงสุด ${wet[0]?roadTime(wet[0].observedAt):'ไม่มีจุดที่รายงานน้ำท่วม'}`;
+      if(!wet.length)roadList.textContent='ไม่มีจุดที่รายงานน้ำท่วม ≥5 ซม. ในชุดข้อมูลล่าสุด (ไม่ยืนยันว่าทุกพื้นที่แห้ง)';
+    }catch(_){roadStatus.textContent='โหลดจุดวัดน้ำท่วมถนนไม่ได้ โปรดตรวจจากเว็บสำนักการระบายน้ำโดยตรง';roadList.replaceChildren();roadMarkers.clearLayers();}
+  }
   let rainData=null, observations=null, activeArea=0, mode='observed';
   const distanceKm=(a,b)=>{const rad=Math.PI/180, dLat=(b.lat-a.lat)*rad, dLng=(b.lng-a.lng)*rad, c=Math.sin(dLat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLng/2)**2;return 12742*Math.atan2(Math.sqrt(c),Math.sqrt(1-c));};
   const nearest=point=>observations?.map(station=>({station,distance:distanceKm(point,station)})).sort((a,b)=>a.distance-b.distance)[0];
@@ -257,7 +282,7 @@
       document.querySelectorAll('.rain-card').forEach(el=>el.classList.remove('active'));
     }catch(error){estimate.textContent='คำนวณไม่ได้';estimateDetail.textContent='โหลดข้อมูลฝนของจุดนี้ไม่ได้ กรุณาลองอีกครั้ง';}
   });
-  fetchObserved(); setInterval(()=>mode==='observed'?fetchObserved():fetchRain(),15*60*1000);
+  fetchObserved();fetchRoadFlood(); setInterval(()=>{mode==='observed'?fetchObserved():fetchRain();fetchRoadFlood();},15*60*1000);
 })();
 </script>
 </body>
