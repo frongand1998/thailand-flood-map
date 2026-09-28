@@ -12,6 +12,7 @@
   </style>
   <style>
     .feed-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:22px}.feed-head h2{font-size:1rem;margin:0}.feed-head p{font-size:.76rem;color:#617b87;margin:5px 0 0}.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;margin-top:13px;background:#eaf3f6;border-radius:11px}.mode-switch button{border:0;border-radius:8px;padding:9px 5px;background:transparent;color:#476977;font-size:.83rem;font-weight:750}.mode-switch button.active{background:white;color:#075f79;box-shadow:0 2px 9px #163b4a20}.refresh{border:1px solid #b9d8e2;border-radius:9px;background:#eef9fc;color:#075f79;padding:8px 10px;font-size:.8rem;font-weight:700;white-space:nowrap}.refresh:disabled{opacity:.5;cursor:wait}.feed-status{font-size:.8rem;color:#55717d;margin:10px 0}.feed-status.error{color:#a03223}.rain-list{display:grid;gap:8px;max-height:304px;overflow:auto;padding-right:3px}.rain-card{border:1px solid #dce8ec;background:white;border-radius:12px;padding:11px 12px;text-align:left;width:100%;display:grid;grid-template-columns:1fr auto;gap:2px 8px}.rain-card.active{border-color:#0a86aa;background:#eef9fc}.rain-card b{font-size:.86rem}.rain-card .rain-n{font-size:.86rem;font-weight:800;color:#0b6685}.rain-card small{color:#607984;font-size:.72rem}.model-box{margin-top:17px;padding:14px;border-radius:12px;background:#eaf5f8;border:1px solid #cfe4e9}.model-box h2{margin:0 0 7px;font-size:.9rem}.model-box .estimate{font-size:1.4rem;font-weight:850;color:#075c7b;margin:4px 0}.model-box p{font-size:.78rem;line-height:1.48;color:#4e6c79;margin:5px 0}.source-link{color:#0b6988}.feed-note{font-size:.75rem;line-height:1.5;color:#637c87;margin:8px 0 0}@media(max-width:760px){.rain-list{max-height:180px}}
+    .measured-button{margin-top:14px;width:100%;padding:10px 12px;border:1px solid #95c8d7;border-radius:9px;background:#fff;color:#075f79;font-size:.84rem;font-weight:750;text-align:center}.measured-button:disabled{opacity:.55;cursor:wait}.measured-readout{margin:11px 0 0;font-size:.78rem;line-height:1.55;color:#456875}.measured-readout strong{color:#075f79;font-size:1rem}.measured-readout.error{color:#a03223}
   </style>
 </head>
 <body>
@@ -22,7 +23,7 @@
       <p class="eyebrow">สำรวจสถานการณ์</p>
       <h1>ถ้าน้ำสูงขึ้น พื้นที่ไหนต่ำกว่า?</h1>
       <p class="intro">เลื่อนระดับน้ำแล้วดูพื้นที่ต่ำบนแผนที่ แตะจุดที่สนใจเพื่อดูความสูงพื้นดินโดยประมาณ</p>
-      <div class="control"><div class="control-head"><label for="water">ระดับน้ำสมมติ</label><span class="value" id="water-value">2.0 <small>ม.</small></span></div><input id="water" type="range" min="0" max="20" value="2" step="0.5" aria-describedby="water-help"><div class="range-ends"><span>0 ม.</span><span>20 ม.</span></div><p class="hint" id="water-help">เทียบกับระดับน้ำทะเลปานกลางโดยประมาณ</p></div>
+      <div class="control"><div class="control-head"><label for="water">ระดับน้ำสมมติ</label><span class="value" id="water-value">2.0 <small>ม.</small></span></div><input id="water" type="range" min="0" max="20" value="2" step="0.5" aria-describedby="water-help"><div class="range-ends"><span>0 ม.</span><span>20 ม.</span></div><p class="hint" id="water-help">เทียบกับระดับน้ำทะเลปานกลางโดยประมาณ · สไลด์นี้ยังไม่ใช่ระดับน้ำจริง</p><button id="load-waterlevel" class="measured-button" type="button">ดูระดับน้ำตรวจวัดใกล้จุดที่เลือก</button><p id="measured-readout" class="measured-readout" role="status">เลือกจุดบนแผนที่ หรือเลื่อนไปยังพื้นที่ แล้วกดปุ่มเพื่อดูค่าที่สถานีใกล้ที่สุด</p></div>
       <p class="section-title">ไปยังพื้นที่</p><div class="places"><button class="place" data-lat="13.7563" data-lng="100.5018" data-z="11">กรุงเทพฯ</button><button class="place" data-lat="13.3611" data-lng="100.9847" data-z="11">ชลบุรี</button><button class="place" data-lat="7.8804" data-lng="98.3923" data-z="11">ภูเก็ต</button><button class="place" data-lat="18.7883" data-lng="98.9853" data-z="11">เชียงใหม่</button></div>
       <div class="readout" aria-live="polite"><div class="label">ตำแหน่งที่เลือก</div><strong id="point-title">แตะบนแผนที่</strong><p id="point-detail">จะแสดงความสูงพื้นดินและผลเทียบกับระดับน้ำที่เลือก</p></div>
       <div class="feed-head"><div><h2>ฝนรายพื้นที่</h2><p id="feed-subtitle">ฝนตรวจวัดจากสถานีกรมอุตุนิยมวิทยา</p></div><button id="refresh-rain" class="refresh" type="button">↻ อัปเดต</button></div>
@@ -44,6 +45,8 @@
   const decode = (r,g,b) => r * 256 + g + b / 256 - 32768;
   const slider = document.getElementById('water');
   const waterValue = document.getElementById('water-value');
+  const loadWaterlevel=document.getElementById('load-waterlevel');
+  const measuredReadout=document.getElementById('measured-readout');
   const loading = document.getElementById('loading');
   const info = document.getElementById('map-info');
   const pointTitle = document.getElementById('point-title');
@@ -54,6 +57,29 @@
   basemap.on('tileerror', () => { info.innerHTML = '<span class="map-error">โหลดแผนที่ฐานไม่ได้ โปรดลองรีเฟรชหน้าเว็บ</span>'; });
   let water = Number(slider.value);
   let pending = 0, failed = 0, selected = null;
+  let waterStations=null;
+  const stationDistanceKm=(a,b)=>{const rad=Math.PI/180,dLat=(b.lat-a.lat)*rad,dLng=(b.lng-a.lng)*rad,c=Math.sin(dLat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLng/2)**2;return 12742*Math.atan2(Math.sqrt(c),Math.sqrt(1-c));};
+  function showMeasured(){
+    if(!waterStations)return;
+    const point=selected||map.getCenter();
+    const nearest=waterStations.map(station=>({station,distance:stationDistanceKm(point,station)})).sort((a,b)=>a.distance-b.distance)[0];
+    const age=nearest&&Date.now()-Date.parse(nearest.station.observedAt.replace(' ','T')+':00+07:00');
+    measuredReadout.classList.toggle('error',!nearest||nearest.distance>50||!Number.isFinite(age)||age<0||age>6*3600*1000);
+    if(!nearest||nearest.distance>50){measuredReadout.textContent='ไม่มีสถานีวัดระดับน้ำภายใน 50 กม. ของจุดที่เลือก';return;}
+    if(!Number.isFinite(age)||age<0||age>6*3600*1000){measuredReadout.textContent='สถานีที่ใกล้ที่สุดยังไม่มีข้อมูลใหม่ใน 6 ชั่วโมง';return;}
+    measuredReadout.replaceChildren();
+    const value=document.createElement('strong');value.textContent=`${nearest.station.levelMsl.toFixed(2)} ม.รทก.`;
+    measuredReadout.append(value,document.createElement('br'),`สถานี${nearest.station.name} · ห่าง ${nearest.distance.toFixed(0)} กม. · ${nearest.station.observedAt} น. · ${nearest.station.agency||'สสน.'}`,document.createElement('br'),'ค่านี้เป็นระดับน้ำที่สถานีในลำน้ำ ไม่ใช่ระดับน้ำท่วมทั้งพื้นที่ จึงไม่เปลี่ยนสไลด์หรือสีแผนที่');
+  }
+  loadWaterlevel.addEventListener('click',async()=>{
+    loadWaterlevel.disabled=true;measuredReadout.classList.remove('error');measuredReadout.textContent='กำลังโหลดระดับน้ำจากสถานีโทรมาตร…';
+    try{
+      const response=await fetch('/api/waterlevel',{cache:'no-store'});if(!response.ok)throw new Error('No data');
+      const data=await response.json();if(!Array.isArray(data.stations)||!data.stations.length)throw new Error('No stations');
+      waterStations=data.stations;showMeasured();
+    }catch(_){measuredReadout.classList.add('error');measuredReadout.textContent='โหลดระดับน้ำตรวจวัดไม่ได้ โปรดลองอีกครั้ง';}
+    finally{loadWaterlevel.disabled=false;}
+  });
   const updateStatus = () => { loading.classList.toggle('show', pending > 0); if (failed) info.innerHTML = '<span class="map-error">โหลดข้อมูลความสูงบางส่วนไม่ได้ โปรดลองใหม่ภายหลัง</span>'; };
   const ElevationLayer = L.GridLayer.extend({
     createTile(coords, done) {
@@ -81,9 +107,9 @@
   const elevation = new ElevationLayer({opacity:.9, maxNativeZoom:12, maxZoom:14, updateWhenIdle:true, keepBuffer:1}).addTo(map);
   function refresh(){ water=Number(slider.value); waterValue.innerHTML=water.toFixed(1)+' <small>ม.</small>'; failed=0; info.textContent='พื้นที่สีฟ้า: ต่ำกว่าระดับน้ำที่เลือก'; elevation.redraw(); if(selected) showPoint(selected); }
   slider.addEventListener('input', refresh);
-  document.querySelectorAll('.place').forEach(button => button.addEventListener('click', () => map.setView([Number(button.dataset.lat),Number(button.dataset.lng)],Number(button.dataset.z))));
+  document.querySelectorAll('.place').forEach(button => button.addEventListener('click', () => {selected=null;map.setView([Number(button.dataset.lat),Number(button.dataset.lng)],Number(button.dataset.z));if(waterStations)showMeasured();}));
   async function showPoint(latlng){
-    selected=latlng; const p=map.project(latlng, Math.min(map.getZoom(),12)); const z=Math.min(map.getZoom(),12); const x=Math.floor(p.x/256), y=Math.floor(p.y/256);
+    selected=latlng;if(waterStations)showMeasured(); const p=map.project(latlng, Math.min(map.getZoom(),12)); const z=Math.min(map.getZoom(),12); const x=Math.floor(p.x/256), y=Math.floor(p.y/256);
     pointTitle.textContent=`${latlng.lat.toFixed(4)}°, ${latlng.lng.toFixed(4)}°`;
     pointDetail.textContent='กำลังอ่านความสูง…';
     try {
