@@ -7,7 +7,7 @@ module.exports = async function handler(req, res) {
       fetch(BASE + 'sensor_now?limit=-1', { signal: AbortSignal.timeout(10000) }),
       fetch(BASE + 'sensor_profile?limit=-1', { signal: AbortSignal.timeout(10000) })
     ]);
-    if (!currentResponse.ok || !profileResponse.ok) throw new Error('Bangkok sensor service unavailable');
+    if (!currentResponse.ok || !profileResponse.ok) throw new Error(`Bangkok sensor service unavailable: ${currentResponse.status}, ${profileResponse.status}`);
     const [current, profiles] = await Promise.all([currentResponse.json(), profileResponse.json()]);
     if (!Array.isArray(current.data) || !Array.isArray(profiles.data)) throw new Error('Invalid sensor response');
     const profileById = new Map(profiles.data.map(item => [item.id, item]));
