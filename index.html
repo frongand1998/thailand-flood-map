@@ -195,7 +195,7 @@
   async function fetchObserved(){
     refreshButton.disabled=true; if(mode==='observed'){feedStatus.classList.remove('error');feedStatus.textContent='กำลังโหลดข้อมูลสถานีกรมอุตุฯ…';}
     try{
-      const response=await fetch('/api/tmd',{cache:'no-store'});if(!response.ok)throw new Error('TMD unavailable');
+      const response=await fetch('/api/observations',{cache:'no-store'});if(!response.ok)throw new Error('TMD unavailable');
       const data=await response.json();if(!Array.isArray(data.stations)||!data.stations.length)throw new Error('No stations');
       const latest=data.stations[0].observedAt, age=Date.now()-Date.parse(latest.replace(' ','T')+'+07:00');
       if(!Number.isFinite(age)||age<0||age>48*3600*1000)throw new Error('Stale observations');
@@ -237,3 +237,4 @@
 </script>
 </body>
 </html>
+
