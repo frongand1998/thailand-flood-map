@@ -16,6 +16,7 @@
     .road-panel{margin-top:20px;padding:15px;border:1px solid #d7e5e9;border-radius:13px;background:#f7fafb}.road-panel h2{margin:0 0 5px;font-size:.95rem}.road-panel p{margin:6px 0;font-size:.77rem;line-height:1.5;color:#53707b}.road-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.road-toggle{display:flex;align-items:center;gap:5px;color:#285669;font-size:.78rem;white-space:nowrap}.road-list{max-height:170px;overflow:auto;margin-top:9px;display:grid;gap:6px}.road-item{width:100%;display:flex;justify-content:space-between;gap:8px;text-align:left;border:1px solid #e0eaed;background:#fff;border-radius:8px;padding:8px;font-size:.78rem}.road-item strong{color:#a63e22;white-space:nowrap}.road-depth-icon{background:transparent;border:0}.road-depth-icon span{display:block;width:max-content;min-width:49px;padding:4px 6px;border-radius:8px;background:#bd472c;color:white;border:2px solid white;box-shadow:0 2px 10px #17334466;font-size:12px;font-weight:800;text-align:center;transform:translate(-50%,-100%)}.point-flood{margin-top:12px;padding:13px;border-radius:11px;background:#edf7fb;border:1px solid #cce5ee}.point-flood .label{font-size:.78rem;color:#456b79;font-weight:750}.point-flood strong{display:block;margin:4px 0;color:#075f79;font-size:1rem}.point-flood p{margin:0;color:#506d78;font-size:.78rem;line-height:1.5}
     .legend-title{font-weight:800;margin-bottom:6px}.legend-note{font-size:.72rem;line-height:1.4;color:#56717d;max-width:205px;margin-top:7px}.swatch{background:rgba(44,177,220,.55)}.swatch.mid{background:rgba(0,143,203,.69)}.swatch.deep{background:rgba(0,82,143,.8)}
     .camera-panel{margin-top:12px;padding:15px;border:1px solid #cfe2e9;border-radius:13px;background:#f2f8fa}.camera-panel h2{margin:0;font-size:.95rem}.camera-panel p{font-size:.77rem;line-height:1.5;color:#53707b;margin:7px 0 0}.camera-icon{background:#0d6584;border:2px solid #fff;border-radius:50%;color:#fff;box-shadow:0 2px 9px #17334470;display:grid;place-items:center;font-size:14px;font-weight:800;width:28px;height:28px}.camera-popup{width:min(300px,70vw);font-size:.8rem}.camera-popup strong{display:block;margin-bottom:6px}.camera-popup select{width:100%;padding:6px;border:1px solid #cfe0e7;border-radius:7px;margin-bottom:7px}.camera-frame{background:#18303a;color:#fff;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;border-radius:7px;text-align:center}.camera-frame img{width:100%;height:100%;object-fit:contain}.camera-popup p{margin:7px 0;color:#53707b;font-size:.73rem;line-height:1.4}.camera-popup a{color:#07688b}
+    .basemap-picker{position:absolute;right:16px;top:66px;z-index:400;background:#fffffff2;border:1px solid #d7e5e9;border-radius:11px;box-shadow:0 5px 20px #163b4a1a;padding:9px 11px;color:#375c69;font-size:.8rem;display:flex;align-items:center;gap:8px}.basemap-picker label{font-weight:750;white-space:nowrap}.basemap-picker select{max-width:125px;border:1px solid #b8d0d9;border-radius:7px;padding:5px 7px;background:#fff;color:#173344;font-size:.8rem}@media(max-width:760px){.basemap-picker{right:10px;top:62px;padding:7px 8px}.basemap-picker select{max-width:110px}}
   </style>
 </head>
 <body>
@@ -39,7 +40,7 @@
       <p id="feed-note" class="feed-note">ข้อมูลตรวจวัดเป็นฝน 24 ชั่วโมงสิ้นสุดเวลา 07:00 น. ที่สถานีใกล้พื้นที่ ไม่ใช่ฝนที่ตก ณ จุดนั้นแบบนาทีต่อนาที · <a class="source-link" href="https://www.tmd.go.th/climate/daily" target="_blank" rel="noopener">กรมอุตุนิยมวิทยา ↗</a></p>
       <div class="notice">แผนที่นี้ระบายสีพื้นที่ที่ระดับพื้นดินต่ำกว่าระดับน้ำสมมติ ใช้สำรวจเบื้องต้นเท่านั้น ยังไม่คำนวณทางไหล คันกั้นน้ำ ระบบระบายน้ำ หรือระดับน้ำจริงในพื้นที่</div>
     </aside>
-    <section class="mapwrap" aria-label="แผนที่ภูมิประเทศประเทศไทย"><div id="map" class="map"></div><div id="loading" class="loading" role="status">กำลังโหลดข้อมูลความสูง…</div><div class="map-info" id="map-info">สีฟ้า: ความลึกตามระดับน้ำสมมติ</div><div class="legend"><div class="legend-title">ความลึกสมมติ</div><div class="legend-row"><span class="swatch"></span><span>มากกว่า 0 ถึง 100 ซม.</span></div><div class="legend-row"><span class="swatch mid"></span><span>มากกว่า 100 ถึง 300 ซม.</span></div><div class="legend-row"><span class="swatch deep"></span><span>มากกว่า 300 ซม.</span></div><div class="legend-note">คำนวณจากระดับน้ำสมมติ − ความสูงพื้นดิน ไม่ใช่ความลึกน้ำท่วมจริง</div></div></section>
+    <section class="mapwrap" aria-label="แผนที่ภูมิประเทศประเทศไทย"><div id="map" class="map"></div><div id="loading" class="loading" role="status">กำลังโหลดข้อมูลความสูง…</div><div class="map-info" id="map-info">สีฟ้า: ความลึกตามระดับน้ำสมมติ</div><div class="basemap-picker"><label for="basemap-style">แผนที่ฐาน</label><select id="basemap-style"><option value="base">ถนน</option><option value="topo">ภูมิประเทศ</option><option value="imagery">ดาวเทียม</option></select></div><div class="legend"><div class="legend-title">ความลึกสมมติ</div><div class="legend-row"><span class="swatch"></span><span>มากกว่า 0 ถึง 100 ซม.</span></div><div class="legend-row"><span class="swatch mid"></span><span>มากกว่า 100 ถึง 300 ซม.</span></div><div class="legend-row"><span class="swatch deep"></span><span>มากกว่า 300 ซม.</span></div><div class="legend-note">คำนวณจากระดับน้ำสมมติ − ความสูงพื้นดิน ไม่ใช่ความลึกน้ำท่วมจริง</div></div></section>
   </main>
 </div>
 <script src="vendor/leaflet.js"></script>
@@ -59,9 +60,22 @@
   const pointFloodValue = document.getElementById('point-flood-value');
   const pointFloodDetail = document.getElementById('point-flood-detail');
   const map = L.map('map', {zoomControl:true, minZoom:6, maxZoom:14}).setView([13.7563,100.5018], 11);
-  const baseUrl = hosted ? '/api/tile?kind=base&z={z}&x={x}&y={y}' : 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
-  const basemap = L.tileLayer(baseUrl, {attribution:'แผนที่ © <a href="https://www.esri.com/">Esri</a> · ความสูง <a href="https://registry.opendata.aws/terrain-tiles/">AWS Terrain Tiles</a>', maxZoom:19}).addTo(map);
-  basemap.on('tileerror', () => { info.innerHTML = '<span class="map-error">โหลดแผนที่ฐานไม่ได้ โปรดลองรีเฟรชหน้าเว็บ</span>'; });
+  const basemapPicker=document.getElementById('basemap-style');
+  const basemapServices={base:'World_Street_Map',topo:'World_Topo_Map',imagery:'World_Imagery'};
+  map.createPane('basemapPane');map.getPane('basemapPane').style.zIndex=180;
+  let basemap=null;
+  function setBasemap(style){
+    if(!Object.hasOwn(basemapServices,style))style='base';
+    basemapPicker.value=style;
+    const url=hosted?`/api/tile?kind=${style}&z={z}&x={x}&y={y}`:`https://services.arcgisonline.com/ArcGIS/rest/services/${basemapServices[style]}/MapServer/tile/{z}/{y}/{x}`;
+    const next=L.tileLayer(url,{pane:'basemapPane',attribution:'แผนที่ © <a href="https://www.esri.com/">Esri</a> · ความสูง <a href="https://registry.opendata.aws/terrain-tiles/">AWS Terrain Tiles</a>',maxZoom:19});
+    next.on('tileerror',()=>{info.innerHTML='<span class="map-error">โหลดแผนที่ฐานไม่ได้ โปรดลองเลือกแบบอื่น</span>'});
+    if(basemap)map.removeLayer(basemap);basemap=next.addTo(map);info.textContent='สีฟ้า: ความลึกตามระดับน้ำสมมติ';
+    try{localStorage.setItem('flood-basemap-style',style)}catch(_){}
+  }
+  let initialBasemap='base';try{initialBasemap=localStorage.getItem('flood-basemap-style')||'base'}catch(_){}
+  setBasemap(initialBasemap);
+  basemapPicker.addEventListener('change',()=>setBasemap(basemapPicker.value));
   let water = Number(slider.value);
   let pending = 0, failed = 0, selected = null;
   let measuredPoint=null;
