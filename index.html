@@ -15,6 +15,7 @@
     .measured-button{margin-top:14px;width:100%;padding:10px 12px;border:1px solid #95c8d7;border-radius:9px;background:#fff;color:#075f79;font-size:.84rem;font-weight:750;text-align:center}.measured-button:disabled{opacity:.55;cursor:wait}.measured-readout{margin:11px 0 0;font-size:.78rem;line-height:1.55;color:#456875}.measured-readout strong{color:#075f79;font-size:1rem}.measured-readout.error{color:#a03223}
     .road-panel{margin-top:20px;padding:15px;border:1px solid #d7e5e9;border-radius:13px;background:#f7fafb}.road-panel h2{margin:0 0 5px;font-size:.95rem}.road-panel p{margin:6px 0;font-size:.77rem;line-height:1.5;color:#53707b}.road-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.road-toggle{display:flex;align-items:center;gap:5px;color:#285669;font-size:.78rem;white-space:nowrap}.road-list{max-height:170px;overflow:auto;margin-top:9px;display:grid;gap:6px}.road-item{width:100%;display:flex;justify-content:space-between;gap:8px;text-align:left;border:1px solid #e0eaed;background:#fff;border-radius:8px;padding:8px;font-size:.78rem}.road-item strong{color:#a63e22;white-space:nowrap}.road-depth-icon{background:transparent;border:0}.road-depth-icon span{display:block;width:max-content;min-width:49px;padding:4px 6px;border-radius:8px;background:#bd472c;color:white;border:2px solid white;box-shadow:0 2px 10px #17334466;font-size:12px;font-weight:800;text-align:center;transform:translate(-50%,-100%)}.point-flood{margin-top:12px;padding:13px;border-radius:11px;background:#edf7fb;border:1px solid #cce5ee}.point-flood .label{font-size:.78rem;color:#456b79;font-weight:750}.point-flood strong{display:block;margin:4px 0;color:#075f79;font-size:1rem}.point-flood p{margin:0;color:#506d78;font-size:.78rem;line-height:1.5}
     .legend-title{font-weight:800;margin-bottom:6px}.legend-note{font-size:.72rem;line-height:1.4;color:#56717d;max-width:205px;margin-top:7px}.swatch{background:rgba(44,177,220,.55)}.swatch.mid{background:rgba(0,143,203,.69)}.swatch.deep{background:rgba(0,82,143,.8)}
+    .camera-panel{margin-top:12px;padding:15px;border:1px solid #cfe2e9;border-radius:13px;background:#f2f8fa}.camera-panel h2{margin:0;font-size:.95rem}.camera-panel p{font-size:.77rem;line-height:1.5;color:#53707b;margin:7px 0 0}.camera-icon{background:#0d6584;border:2px solid #fff;border-radius:50%;color:#fff;box-shadow:0 2px 9px #17334470;display:grid;place-items:center;font-size:14px;font-weight:800;width:28px;height:28px}.camera-popup{width:min(300px,70vw);font-size:.8rem}.camera-popup strong{display:block;margin-bottom:6px}.camera-popup select{width:100%;padding:6px;border:1px solid #cfe0e7;border-radius:7px;margin-bottom:7px}.camera-frame{background:#18303a;color:#fff;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;border-radius:7px;text-align:center}.camera-frame img{width:100%;height:100%;object-fit:contain}.camera-popup p{margin:7px 0;color:#53707b;font-size:.73rem;line-height:1.4}.camera-popup a{color:#07688b}
   </style>
 </head>
 <body>
@@ -29,6 +30,7 @@
       <p class="section-title">ไปยังพื้นที่</p><div class="places"><button class="place" data-lat="13.7563" data-lng="100.5018" data-z="11">กรุงเทพฯ</button><button class="place" data-lat="13.3611" data-lng="100.9847" data-z="11">ชลบุรี</button><button class="place" data-lat="7.8804" data-lng="98.3923" data-z="11">ภูเก็ต</button><button class="place" data-lat="18.7883" data-lng="98.9853" data-z="11">เชียงใหม่</button></div>
       <div class="readout" aria-live="polite"><div class="label">ตำแหน่งที่เลือก</div><strong id="point-title">แตะบนแผนที่</strong><p id="point-detail">จะแสดงความสูงพื้นดินและผลเทียบกับระดับน้ำที่เลือก</p><div class="point-flood" role="status"><div class="label">น้ำท่วมใกล้จุดที่เลือก · ตรวจวัดจริง</div><strong id="point-flood-value">แตะจุดที่สนใจบนแผนที่</strong><p id="point-flood-detail">จะแสดงเซนเซอร์น้ำท่วมถนนที่ใกล้ที่สุด หากมีข้อมูลล่าสุด</p></div></div>
       <div class="road-panel"><div class="road-head"><h2>น้ำท่วมถนนตรวจวัด · กทม.</h2><label class="road-toggle"><input id="road-toggle" type="checkbox" checked> แสดงบนแผนที่</label></div><p id="road-status" role="status">กำลังโหลดจุดวัดน้ำท่วมถนน…</p><div id="road-list" class="road-list" aria-label="จุดวัดน้ำท่วมถนนล่าสุด"></div><p>ตัวเลขเป็นความลึกบนถนน ณ จุดเซนเซอร์ ไม่ใช่ระดับน้ำในบ้านหรือทั้งเขต · <a class="source-link" href="https://floodbangkok.bangkok.go.th/" target="_blank" rel="noopener">สำนักการระบายน้ำ กทม. ↗</a></p></div>
+      <div class="camera-panel"><div class="road-head"><h2>กล้อง CCTV · กทม.</h2><label class="road-toggle"><input id="camera-toggle" type="checkbox" checked> แสดงหมุด</label></div><p id="camera-status" role="status">กำลังโหลดพิกัดกล้อง…</p><p>ซูมเข้าในกรุงเทพฯ แล้วกดหมุด 📹 เพื่อดูภาพที่อัปเดตจากกล้อง ภาพอาจขัดข้องหรือไม่ใช่ภาพ ณ วินาทีนี้ · <a class="source-link" href="https://floodbangkok.bangkok.go.th/" target="_blank" rel="noopener">แหล่งข้อมูล กทม. ↗</a></p></div>
       <div class="feed-head"><div><h2>ฝนรายพื้นที่</h2><p id="feed-subtitle">ฝนตรวจวัดจากสถานีกรมอุตุนิยมวิทยา</p></div><button id="refresh-rain" class="refresh" type="button">↻ อัปเดต</button></div>
       <div class="mode-switch" role="group" aria-label="เลือกโหมดข้อมูลฝน"><button id="mode-observed" class="active" type="button" aria-pressed="true">ฝนตรวจวัด</button><button id="mode-simulated" type="button" aria-pressed="false">จำลอง</button></div>
       <p id="feed-status" class="feed-status" role="status">กำลังโหลดข้อมูลฝน…</p>
@@ -149,6 +151,61 @@
   const modeButtons={observed:document.getElementById('mode-observed'),simulated:document.getElementById('mode-simulated')};
   const markers=L.layerGroup().addTo(map);
   const roadMarkers=L.layerGroup().addTo(map);
+  const cameraMarkers=L.layerGroup().addTo(map);
+  const cameraToggle=document.getElementById('camera-toggle');
+  const cameraStatus=document.getElementById('camera-status');
+  let cameraSites=[];
+  cameraToggle.addEventListener('change',()=>cameraToggle.checked?renderCameras():cameraMarkers.clearLayers());
+  map.on('moveend zoomend',renderCameras);
+  function validCameraUrl(value){
+    try{const url=new URL(value);return url.protocol==='https:'&&url.pathname==='/api/stream.mp4'&&(/(^|\.)larry-cctv\.com$|(^|\.)multiinno\.com$/).test(url.hostname)?url.href:null}catch{return null}
+  }
+  function cameraPopup(site){
+    const box=document.createElement('div');box.className='camera-popup';
+    const title=document.createElement('strong');title.textContent=`กล้อง CCTV · ${site.cameras[0].name}`;box.append(title);
+    const select=document.createElement('select');select.setAttribute('aria-label','เลือกกล้องจุดนี้');
+    site.cameras.forEach((camera,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=camera.name;select.append(option)});
+    if(site.cameras.length>1)box.append(select);
+    const frame=document.createElement('div');frame.className='camera-frame';frame.textContent='กำลังเชื่อมต่อภาพ…';box.append(frame);
+    const note=document.createElement('p');note.textContent='ภาพจากกล้อง กทม. อัปเดตประมาณทุก 5 วินาทีเมื่อเปิดหน้าต่างนี้';box.append(note);
+    const link=document.createElement('a');link.href='https://floodbangkok.bangkok.go.th/';link.target='_blank';link.rel='noopener';link.textContent='ดูแหล่งข้อมูล กทม. ↗';box.append(link);
+    let timer=null,request=0,failures=0;
+    function stop(){if(timer)clearTimeout(timer);timer=null;request++;frame.replaceChildren()}
+    function load(){
+      const camera=site.cameras[Number(select.value)||0];if(!camera)return;
+      const id=++request;const image=new Image();image.alt=`ภาพจากกล้อง ${camera.name}`;
+      const timeout=setTimeout(()=>image.onerror?.(),12000);
+      image.onload=()=>{clearTimeout(timeout);if(id!==request)return;failures=0;frame.replaceChildren(image);note.textContent='ภาพล่าสุดที่โหลดได้ · กำลังอัปเดตทุก 5 วินาที';timer=setTimeout(load,5000)};
+      image.onerror=()=>{clearTimeout(timeout);if(id!==request)return;failures++;frame.textContent='สัญญาณภาพขัดข้องหรือยังโหลดไม่ได้';note.textContent='โปรดลองกล้องอื่นหรือตรวจที่เว็บ กทม.';if(failures<2)timer=setTimeout(load,5000)};
+      const proxy=new URL('https://floodbangkok.bangkok.go.th/api/proxy');proxy.searchParams.set('rtcUrl',camera.url);proxy.searchParams.set('timestamp',String(Date.now()));image.src=proxy.href;
+    }
+    select.addEventListener('change',()=>{stop();failures=0;frame.textContent='กำลังเชื่อมต่อภาพ…';note.textContent='กำลังโหลดภาพจากกล้องที่เลือก';load()});
+    box.start=load;box.stop=stop;return box;
+  }
+  function renderCameras(){
+    cameraMarkers.clearLayers();
+    if(!cameraToggle.checked||map.getZoom()<12){if(cameraSites.length)cameraStatus.textContent=`มี ${cameraSites.reduce((n,site)=>n+site.cameras.length,0)} กล้อง · ซูมถึงระดับ 12 เพื่อแสดงหมุด`;return}
+    const bounds=map.getBounds().pad(.2);let visible=0;
+    for(const site of cameraSites){
+      if(!bounds.contains([site.lat,site.lng]))continue;visible++;
+      const icon=L.divIcon({className:'',html:'<span class="camera-icon" aria-hidden="true">📹</span>',iconSize:[28,28],iconAnchor:[14,14]});
+      const marker=L.marker([site.lat,site.lng],{icon,title:`กล้อง CCTV ${site.cameras[0].name}`}).addTo(cameraMarkers);
+      marker.on('click',()=>{const popup=cameraPopup(site);marker.once('popupclose',()=>popup.stop());marker.once('popupopen',()=>popup.start());marker.bindPopup(popup,{maxWidth:320}).openPopup()});
+    }
+    cameraStatus.textContent=`แสดง ${visible} จุดกล้องในหน้าจอ · กดหมุดเพื่อดูภาพ`;
+  }
+  async function fetchCameras(){
+    try{
+      const response=await fetch('https://floodbangkok.bangkok.go.th/bkk/dds/services/api/floods/v1/items/camera_profile?limit=-1&fields=id,CameraName,LiveStream,Lat,Long,camera_description',{cache:'no-store'});
+      if(!response.ok)throw new Error('camera list unavailable');const body=await response.json();if(!Array.isArray(body.data))throw new Error('invalid camera list');
+      const grouped=new Map();
+      for(const row of body.data){const lat=Number(row.Lat),lng=Number(row.Long),url=validCameraUrl(row.LiveStream);if(!Number.isFinite(lat)||!Number.isFinite(lng)||lat<13||lat>14.3||lng<99.9||lng>101.2||!url)continue;
+        const key=`${lat.toFixed(5)},${lng.toFixed(5)}`;if(!grouped.has(key))grouped.set(key,{lat,lng,cameras:[]});
+        grouped.get(key).cameras.push({name:String(row.camera_description||row.CameraName||'ไม่ระบุชื่อ'),url});
+      }
+      cameraSites=[...grouped.values()];if(!cameraSites.length)throw new Error('no usable cameras');renderCameras();
+    }catch{cameraStatus.textContent='โหลดพิกัดกล้องไม่ได้ โปรดลองรีเฟรชหน้าเว็บ'}
+  }
   let roadPoints=[],roadLoadState='loading';
   roadToggle.addEventListener('change',()=>roadToggle.checked?roadMarkers.addTo(map):map.removeLayer(roadMarkers));
   const roadTime=time=>new Intl.DateTimeFormat('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(time+'Z'))+' น.';
@@ -321,7 +378,7 @@
       document.querySelectorAll('.rain-card').forEach(el=>el.classList.remove('active'));
     }catch(error){estimate.textContent='คำนวณไม่ได้';estimateDetail.textContent='โหลดข้อมูลฝนของจุดนี้ไม่ได้ กรุณาลองอีกครั้ง';}
   });
-  fetchObserved();fetchRoadFlood(); setInterval(()=>{mode==='observed'?fetchObserved():fetchRain();fetchRoadFlood();},15*60*1000);
+  fetchObserved();fetchRoadFlood();fetchCameras(); setInterval(()=>{mode==='observed'?fetchObserved():fetchRain();fetchRoadFlood();fetchCameras();},15*60*1000);
 })();
 </script>
 </body>
