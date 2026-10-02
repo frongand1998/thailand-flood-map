@@ -1,4 +1,5 @@
-const MAX_ZOOM = { base: 18, elevation: 12 };
+const MAX_ZOOM = { base: 18, topo: 18, imagery: 18, elevation: 12 };
+const BASEMAP_SERVICE = { base: 'World_Street_Map', topo: 'World_Topo_Map', imagery: 'World_Imagery' };
 
 module.exports = async function handler(req, res) {
   const { kind, z: rawZ, x: rawX, y: rawY } = req.query;
@@ -11,10 +12,7 @@ module.exports = async function handler(req, res) {
 
   const urls = kind === 'elevation'
     ? [`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`]
-    : [
-        `https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}`,
-        `https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}`
-      ];
+    : [`https://services.arcgisonline.com/ArcGIS/rest/services/${BASEMAP_SERVICE[kind]}/MapServer/tile/${z}/${y}/${x}`];
 
   for (const url of urls) {
     try {
