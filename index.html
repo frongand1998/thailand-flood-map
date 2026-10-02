@@ -14,6 +14,7 @@
     .feed-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:22px}.feed-head h2{font-size:1rem;margin:0}.feed-head p{font-size:.76rem;color:#617b87;margin:5px 0 0}.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;margin-top:13px;background:#eaf3f6;border-radius:11px}.mode-switch button{border:0;border-radius:8px;padding:9px 5px;background:transparent;color:#476977;font-size:.83rem;font-weight:750}.mode-switch button.active{background:white;color:#075f79;box-shadow:0 2px 9px #163b4a20}.refresh{border:1px solid #b9d8e2;border-radius:9px;background:#eef9fc;color:#075f79;padding:8px 10px;font-size:.8rem;font-weight:700;white-space:nowrap}.refresh:disabled{opacity:.5;cursor:wait}.feed-status{font-size:.8rem;color:#55717d;margin:10px 0}.feed-status.error{color:#a03223}.rain-list{display:grid;gap:8px;max-height:304px;overflow:auto;padding-right:3px}.rain-card{border:1px solid #dce8ec;background:white;border-radius:12px;padding:11px 12px;text-align:left;width:100%;display:grid;grid-template-columns:1fr auto;gap:2px 8px}.rain-card.active{border-color:#0a86aa;background:#eef9fc}.rain-card b{font-size:.86rem}.rain-card .rain-n{font-size:.86rem;font-weight:800;color:#0b6685}.rain-card small{color:#607984;font-size:.72rem}.model-box{margin-top:17px;padding:14px;border-radius:12px;background:#eaf5f8;border:1px solid #cfe4e9}.model-box h2{margin:0 0 7px;font-size:.9rem}.model-box .estimate{font-size:1.4rem;font-weight:850;color:#075c7b;margin:4px 0}.model-box p{font-size:.78rem;line-height:1.48;color:#4e6c79;margin:5px 0}.source-link{color:#0b6988}.feed-note{font-size:.75rem;line-height:1.5;color:#637c87;margin:8px 0 0}@media(max-width:760px){.rain-list{max-height:180px}}
     .measured-button{margin-top:14px;width:100%;padding:10px 12px;border:1px solid #95c8d7;border-radius:9px;background:#fff;color:#075f79;font-size:.84rem;font-weight:750;text-align:center}.measured-button:disabled{opacity:.55;cursor:wait}.measured-readout{margin:11px 0 0;font-size:.78rem;line-height:1.55;color:#456875}.measured-readout strong{color:#075f79;font-size:1rem}.measured-readout.error{color:#a03223}
     .road-panel{margin-top:20px;padding:15px;border:1px solid #d7e5e9;border-radius:13px;background:#f7fafb}.road-panel h2{margin:0 0 5px;font-size:.95rem}.road-panel p{margin:6px 0;font-size:.77rem;line-height:1.5;color:#53707b}.road-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.road-toggle{display:flex;align-items:center;gap:5px;color:#285669;font-size:.78rem;white-space:nowrap}.road-list{max-height:170px;overflow:auto;margin-top:9px;display:grid;gap:6px}.road-item{width:100%;display:flex;justify-content:space-between;gap:8px;text-align:left;border:1px solid #e0eaed;background:#fff;border-radius:8px;padding:8px;font-size:.78rem}.road-item strong{color:#a63e22;white-space:nowrap}.road-depth-icon{background:transparent;border:0}.road-depth-icon span{display:block;width:max-content;min-width:49px;padding:4px 6px;border-radius:8px;background:#bd472c;color:white;border:2px solid white;box-shadow:0 2px 10px #17334466;font-size:12px;font-weight:800;text-align:center;transform:translate(-50%,-100%)}.point-flood{margin-top:12px;padding:13px;border-radius:11px;background:#edf7fb;border:1px solid #cce5ee}.point-flood .label{font-size:.78rem;color:#456b79;font-weight:750}.point-flood strong{display:block;margin:4px 0;color:#075f79;font-size:1rem}.point-flood p{margin:0;color:#506d78;font-size:.78rem;line-height:1.5}
+    .legend-title{font-weight:800;margin-bottom:6px}.legend-note{font-size:.72rem;line-height:1.4;color:#56717d;max-width:205px;margin-top:7px}.swatch{background:rgba(44,177,220,.55)}.swatch.mid{background:rgba(0,143,203,.69)}.swatch.deep{background:rgba(0,82,143,.8)}
   </style>
 </head>
 <body>
@@ -36,7 +37,7 @@
       <p id="feed-note" class="feed-note">ข้อมูลตรวจวัดเป็นฝน 24 ชั่วโมงสิ้นสุดเวลา 07:00 น. ที่สถานีใกล้พื้นที่ ไม่ใช่ฝนที่ตก ณ จุดนั้นแบบนาทีต่อนาที · <a class="source-link" href="https://www.tmd.go.th/climate/daily" target="_blank" rel="noopener">กรมอุตุนิยมวิทยา ↗</a></p>
       <div class="notice">แผนที่นี้ระบายสีพื้นที่ที่ระดับพื้นดินต่ำกว่าระดับน้ำสมมติ ใช้สำรวจเบื้องต้นเท่านั้น ยังไม่คำนวณทางไหล คันกั้นน้ำ ระบบระบายน้ำ หรือระดับน้ำจริงในพื้นที่</div>
     </aside>
-    <section class="mapwrap" aria-label="แผนที่ภูมิประเทศประเทศไทย"><div id="map" class="map"></div><div id="loading" class="loading" role="status">กำลังโหลดข้อมูลความสูง…</div><div class="map-info" id="map-info">พื้นที่สีฟ้า: ต่ำกว่าระดับน้ำที่เลือก</div><div class="legend"><div class="legend-row"><span class="swatch"></span><span>ต่ำกว่าเล็กน้อย</span></div><div class="legend-row"><span class="swatch deep"></span><span>ต่ำกว่ามาก</span></div></div></section>
+    <section class="mapwrap" aria-label="แผนที่ภูมิประเทศประเทศไทย"><div id="map" class="map"></div><div id="loading" class="loading" role="status">กำลังโหลดข้อมูลความสูง…</div><div class="map-info" id="map-info">สีฟ้า: ความลึกตามระดับน้ำสมมติ</div><div class="legend"><div class="legend-title">ความลึกสมมติ</div><div class="legend-row"><span class="swatch"></span><span>มากกว่า 0 ถึง 100 ซม.</span></div><div class="legend-row"><span class="swatch mid"></span><span>มากกว่า 100 ถึง 300 ซม.</span></div><div class="legend-row"><span class="swatch deep"></span><span>มากกว่า 300 ซม.</span></div><div class="legend-note">คำนวณจากระดับน้ำสมมติ − ความสูงพื้นดิน ไม่ใช่ความลึกน้ำท่วมจริง</div></div></section>
   </main>
 </div>
 <script src="vendor/leaflet.js"></script>
@@ -94,7 +95,9 @@
           for(let i=0;i<data.length;i+=4){
             const h=decode(data[i],data[i+1],data[i+2]); const depth=water-h;
             if (depth <= 0) { data[i+3]=0; continue; }
-            data[i]=depth>3?0:0; data[i+1]=depth>3?82:143; data[i+2]=depth>3?143:203; data[i+3]=depth>3?190:138;
+            if(depth<=1){data[i]=44;data[i+1]=177;data[i+2]=220;data[i+3]=140;}
+            else if(depth<=3){data[i]=0;data[i+1]=143;data[i+2]=203;data[i+3]=176;}
+            else{data[i]=0;data[i+1]=82;data[i+2]=143;data[i+3]=204;}
           }
           context.putImageData(image,0,0); done(null,canvas);
         } catch(e) { failed++; updateStatus(); done(e,canvas); }
@@ -106,7 +109,7 @@
     }
   });
   const elevation = new ElevationLayer({opacity:.9, maxNativeZoom:12, maxZoom:14, updateWhenIdle:true, keepBuffer:1}).addTo(map);
-  function refresh(){ water=Number(slider.value); waterValue.innerHTML=water.toFixed(1)+' <small>ม.</small>'; failed=0; info.textContent='พื้นที่สีฟ้า: ต่ำกว่าระดับน้ำที่เลือก'; elevation.redraw(); if(selected) showPoint(selected); }
+  function refresh(){ water=Number(slider.value); waterValue.innerHTML=water.toFixed(1)+' <small>ม.</small>'; failed=0; info.textContent='สีฟ้า: ความลึกตามระดับน้ำสมมติ'; elevation.redraw(); if(selected) showPoint(selected); }
   slider.addEventListener('input', refresh);
   document.querySelectorAll('.place').forEach(button => button.addEventListener('click', () => {selected=null;pointFloodValue.textContent='แตะจุดที่สนใจบนแผนที่';pointFloodDetail.textContent='จะแสดงเซนเซอร์น้ำท่วมถนนที่ใกล้ที่สุด หากมีข้อมูลล่าสุด';map.setView([Number(button.dataset.lat),Number(button.dataset.lng)],Number(button.dataset.z));if(measuredPoint)measuredReadout.textContent='เปลี่ยนพื้นที่แล้ว กดปุ่มเพื่ออ่านสถานีใกล้จุดใหม่';}));
   async function showPoint(latlng){
@@ -117,7 +120,7 @@
       const img=new Image(); img.crossOrigin='anonymous'; img.src=tileUrl(z,x,y); await img.decode();
       const c=document.createElement('canvas'); c.width=c.height=1; const cx=c.getContext('2d'); cx.drawImage(img,Math.floor(p.x-x*256),Math.floor(p.y-y*256),1,1,0,0,1,1);
       const d=cx.getImageData(0,0,1,1).data; const h=decode(d[0],d[1],d[2]);
-      const gap=water-h; pointDetail.textContent=`พื้นดินสูงประมาณ ${h.toFixed(1)} ม. ${gap>0?`ต่ำกว่าระดับน้ำสมมติ ${gap.toFixed(1)} ม.`:`สูงกว่าระดับน้ำสมมติ ${Math.abs(gap).toFixed(1)} ม.`}`;
+      const gap=water-h; const scenarioDepth=gap<.1?'น้อยกว่า 10':String(Math.round(gap*10)*10); pointDetail.textContent=`พื้นดินสูงประมาณ ${h.toFixed(1)} ม. ${gap>0?`ความลึกตามสมมติประมาณ ${scenarioDepth} ซม. ไม่ใช่ระดับน้ำท่วมจริง`:`สูงกว่าระดับน้ำสมมติ ${Math.abs(gap).toFixed(1)} ม. ไม่แสดงว่าจุดนี้แห้งจริง`}`;
     } catch(e) { pointDetail.textContent='อ่านความสูงจุดนี้ไม่ได้ กรุณาลองอีกครั้ง'; }
   }
   map.on('click',e=>showPoint(e.latlng));
